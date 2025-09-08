@@ -1,13 +1,13 @@
 # Date: 2025-09-07 SUN
 ## Problem: [128] Longest Consecutive Sequence
-- **Topic:** Array
+- **Topics:** Array, Hash Table
 - **Difficulty:** Medium
 - **Link:** https://leetcode.com/problems/longest-consecutive-sequence/description/
 ### Problem Summary
 - **Requirement:** Given an unsorted array of integers `nums`, return the length of the longest consecutive elements sequence.
 - **Constraint:** Algorithm must run in `O(n)` time.
 ### Key Insight
-- HashSet
+- Hash Set
   - stores unique elements
   - allows `O(1)` lookups
 ### Solution
@@ -42,7 +42,7 @@ class Solution:
   - HashSet takes `O(n)` space.
   - Integers take `O(1)` space.
 ## Problem: [1] Two Sum
-- **Topic:** Array
+- **Topics:** Array, Hash Table
 - **Difficulty:** Easy
 - **Link:** https://leetcode.com/problems/two-sum/description/
 ### Problem Summary
@@ -63,8 +63,10 @@ class Solution:
             # if complement of current `num` found, return indices
             if target - num in comp:
                 return [comp[target - num], i]
+
             # else add current `num` to hash table
             comp[num] = i
+
         # return empty list if no valid pair found
         return []
 ```
@@ -74,3 +76,41 @@ class Solution:
   - Each lookup in the table costs `O(1)`.
 - Space Complexity: `O(n)`
   - The hash table can store at most `n` elements.
+# Date: 2025-09-08 MON
+## Problem: [3] Longest Substring Without Repeating Characters
+- **Topics:** String, Hash Table, Sliding Window
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+### Problem Summary
+- **Requirement:** Given a string `s`, find the length of the longest substring without duplicate characters.
+### Key Insight
+- Hash Table
+  - maps character to index of last occurrence
+- Sliding Window
+  - avoids listing all possible substrings
+### Solution
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        longest = 0
+        table = {}
+        left = 0
+
+        # the right index iterates through the string
+        for right in range(len(s)):
+            # if repeat char found, move left index one past last occurrence
+            if s[right] in table:
+                # "max()" prevents moving backwards
+                left = max(table[s[right]] + 1, left)
+
+            # update longest counter, update table with new char
+            longest = max(longest, right - left + 1)
+            table[s[right]] = right
+
+        return longest
+```
+### Complexity Analysis
+- Time Complexity: `O(n)`
+  - Index `right` will iterate `n` times.
+- Space Complexity: `O(min(m, n))`
+  - We need `O(k)` space for the sliding window, where k is the size of the hash table. The size of the table is upper bounded by the size of the string `n` and the size of the charset/alphabet `m`.
