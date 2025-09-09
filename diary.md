@@ -5,11 +5,11 @@
 - **Link:** https://leetcode.com/problems/longest-consecutive-sequence/description/
 ### Problem Summary
 - **Requirement:** Given an unsorted array of integers `nums`, return the length of the longest consecutive elements sequence.
-- **Constraint:** Algorithm must run in `O(n)` time.
+- **Constraint:** Algorithm must run in $O(n)$ time.
 ### Key Insight
 - Hash Set
   - stores unique elements
-  - allows `O(1)` lookups
+  - allows $O(1)$ lookups
 ### Solution
 ```python
 class Solution:
@@ -35,12 +35,12 @@ class Solution:
         return longest_streak
 ```
 ### Complexity Analysis
-- Time Complexity: `O(n)`
-  - The nested loops might initially appear to be of `O(n^2)` complexity. Upon closer inspection, it is revealed to be `O(n)`. Because the inner loop is only reached when `num` is the start of a sequence.
-  - All other computations occur in `O(1)`.
-- Space Complexity: `O(n)`
-  - HashSet takes `O(n)` space.
-  - Integers take `O(1)` space.
+- Time Complexity: $O(n)$
+  - The nested loops might initially appear to be of $O(n^2)$ complexity. Upon closer inspection, it is revealed to be $O(n)$. Because the inner loop is only reached when `num` is the start of a sequence.
+  - All other computations occur in $O(1)$.
+- Space Complexity: $O(n)$
+  - HashSet takes $O(n)$ space.
+  - Integers take $O(1)$ space.
 ## Problem: [1] Two Sum
 - **Topics:** Array, Hash Table
 - **Difficulty:** Easy
@@ -51,7 +51,7 @@ class Solution:
 - **Constraint:** May not use the same element twice.
 ### Key Insight
 - Hash Table
-  - allows `O(1)` lookups
+  - allows $O(1)$ lookups
 ### Solution
 ```python
 class Solution:
@@ -71,11 +71,11 @@ class Solution:
         return []
 ```
 ### Complexity Analysis
-- Time Complexity: `O(n)`
-  - The array of size `n` is traversed through once.
-  - Each lookup in the table costs `O(1)`.
-- Space Complexity: `O(n)`
-  - The hash table can store at most `n` elements.
+- Time Complexity: $O(n)$
+  - The array of size $n$ is traversed through once.
+  - Each lookup in the table costs $O(1)$.
+- Space Complexity: $O(n)$
+  - The hash table can store at most $n$ elements.
 # Date: 2025-09-08 MON
 ## Problem: [3] Longest Substring Without Repeating Characters
 - **Topics:** String, Hash Table, Sliding Window
@@ -110,7 +110,74 @@ class Solution:
         return longest
 ```
 ### Complexity Analysis
-- Time Complexity: `O(n)`
-  - Index `right` will iterate `n` times.
-- Space Complexity: `O(min(m, n))`
-  - We need `O(k)` space for the sliding window, where k is the size of the hash table. The size of the table is upper bounded by the size of the string `n` and the size of the charset/alphabet `m`.
+- Time Complexity: $O(n)$
+  - Index $right$ will iterate $n$ times.
+- Space Complexity: $O(min(m, n))$
+  - We need $O(k)$ space for the sliding window, where $k$ is the size of the hash table. The size of the table is upper bounded by the size of the string $n$ and the size of the charset/alphabet $m$.
+## Problem: [5] Longest Palindromic Substring
+- **Topics:** String, Dynamic Programming, Two Pointers
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/longest-palindromic-substring/description/
+### Problem Summary
+- **Requirement:** Given a string `s`, return the longest palindromic substring in `s`.
+### Key Insight
+- Dynamic Programming
+  - solves complex problems by breaking them down into simpler subproblems, solving each subproblem once, and storing their results to avoid redundant work
+  - "Remember and Reuse" instead of "Repeat and Regret" (brute force)
+  - especially useful for 2 scenarios:
+    - overlapping subproblems
+    - optimal substructure
+  - 2 common approaches:
+    - Top-down (Memoization) -> recursive
+    - Bottom-up (Tabulation) -> iterative
+- "Expand From Centers"
+  - "expand" at each single character or pair of identical connected characters, expand as long as the palindrome condition is met
+- TODO
+### Solution 1 (Best Space Complexity)
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        left = 0
+        right = 0
+
+        # expands to find longest palindromic substring with l, r as center
+        def expand(l, r):
+            # bounds & palindrome check
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                l -= 1
+                r += 1
+
+            # return the last eligible indices
+            return [l + 1, r - 1]
+
+        # iterate through all "centers"
+        for i in range(len(s)):
+            # odd centers
+            l, r = expand(i, i)
+            # update left, right if new longest palindrome found
+            if r - l > right - left:
+                left = l
+                right = r
+
+            # even centers
+            l, r = expand(i, i + 1)
+            # update left, right if new longest palindrome found
+            if r - l > right - left:
+                left = l
+                right = r
+
+        # return the substring ("+1" for proper indexing)
+        return s[left : right + 1]
+```
+### Complexity Analysis 1 (Best Space Complexity)
+- Time Complexity: $O(n^2)$
+  - There are $2n − 1 = O(n)$ centers. For each center, we call expand, which costs up to $O(n)$.
+- Space Complexity: $O(1)$
+  - No extra space used except for a few integers.
+### Solution 2 (Best Time Complexity)
+```python
+TODO
+```
+### Complexity Analysis 2 (Best Time Complexity)
+- Time Complexity: TODO
+- Space Complexity: TODO
