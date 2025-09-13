@@ -8,8 +8,8 @@
 - **Constraint:** Algorithm must run in $O(n)$ time.
 ### Key Insight
 - Hash Set
-  - stores unique elements
-  - allows $O(1)$ lookups
+  - Stores unique elements
+  - Allows $O(1)$ lookups
 ### Solution
 ```python
 class Solution:
@@ -51,7 +51,7 @@ class Solution:
 - **Constraint:** May not use the same element twice.
 ### Key Insight
 - Hash Table
-  - allows $O(1)$ lookups
+  - Allows $O(1)$ lookups
 ### Solution
 ```python
 class Solution:
@@ -85,9 +85,9 @@ class Solution:
 - **Requirement:** Given a string `s`, find the length of the longest substring without duplicate characters.
 ### Key Insight
 - Hash Table
-  - maps character to index of last occurrence
+  - Maps character to index of last occurrence
 - Sliding Window
-  - avoids listing all possible substrings
+  - Avoids listing all possible substrings
 ### Solution
 ```python
 class Solution:
@@ -111,7 +111,7 @@ class Solution:
 ```
 ### Complexity Analysis
 - Time Complexity: $O(n)$
-  - Index $right$ will iterate $n$ times.
+  - Index `right` will iterate $n$ times.
 - Space Complexity: $O(min(m, n))$
   - We need $O(k)$ space for the sliding window, where $k$ is the size of the hash table. The size of the table is upper bounded by the size of the string $n$ and the size of the charset/alphabet $m$.
 ## Problem: [5] Longest Palindromic Substring
@@ -122,18 +122,18 @@ class Solution:
 - **Requirement:** Given a string `s`, return the longest palindromic substring in `s`.
 ### Key Insight
 - Dynamic Programming
-  - solves complex problems by breaking them down into simpler subproblems, solving each subproblem once, and storing their results to avoid redundant work
+  - Solves complex problems by breaking them down into simpler subproblems, solving each subproblem once, and storing their results to avoid redundant work
   - "Remember and Reuse" instead of "Repeat and Regret" (brute force)
-  - especially useful for 2 scenarios:
-    - overlapping subproblems
-    - optimal substructure
+  - Especially useful for 2 scenarios:
+    - Overlapping subproblems
+    - Optimal substructure
   - 2 common approaches:
     - Top-down (Memoization) -> recursive
     - Bottom-up (Tabulation) -> iterative
 - "Expand From Centers"
-  - "expand" at each single character or pair of identical connected characters, expand as long as the palindrome condition is met
+  - "Expand" at each single character or pair of identical connected characters, expand as long as the palindrome condition is met
 - Manacher's Algorithm **[BEYOND THE SCOPE]**
-  - finds the longest palindromic substring in $O(n)$ time and space.
+  - Finds the longest palindromic substring in $O(n)$ time and space.
 ### Solution
 ```python
 class Solution:
@@ -191,10 +191,9 @@ class Solution:
   }
   ```
 ### Key Insight
-- Depth First Search
-- Breadth First Search
+- Depth First Search & Breadth First Search
 - Hash Table
-  - quick reference from original node to cloned node
+  - Quick reference from original node to cloned node
 ### Solution
 ```python
 """
@@ -237,7 +236,53 @@ class Solution:
         return clone_node
 ```
 ### Complexity Analysis
-- Time Complexity: $O(n + m)$
-  - $n$ is the number of nodes and $m$ is the number of edges.
+- Time Complexity: $O(n + e)$
+  - $n$ is the number of nodes and $e$ is the number of edges.
 - Space Complexity: $O(n)$
-  - The space is occupied by the `visited` hash map and the recursion stack. `visited` takes up $O(n)$ space. The space occupied by the recursion stack is $O(h)$ where $h$ is the height of the graph. $h$ is bounded by $n$ in the worst case. Hence, the recursion stack also takes up $O(n)$ space.
+  - The space is occupied by the `visited` hash map and the recursion stack. `visited` takes up $O(n)$ space.
+  - The space occupied by the recursion stack is $O(h)$ where $h$ is the height of the graph. $h$ is bounded by $n$ in the worst case. Hence, the recursion stack also takes up $O(n)$ space.
+## Problem: [261] Graph Valid Tree
+- **Topics:** Graph, DFS, BFS
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/graph-valid-tree/description/
+### Problem Summary
+- **Requirement:** You have a graph of `n` nodes labeled from `0` to `n - 1`. You are given an integer `n` and a list `edges` where `edges[i] = [a_i, b_i]` indicates that there is an undirected edge between nodes `a_i` and `b_i` in the graph. Return `true` if the edges of the given graph make up a valid tree, and `false` otherwise.
+### Key Insight
+- Depth First Search & Breadth First Search
+- Graph Theory
+  - For the graph to be a valid tree, it must have exactly `n - 1` edges. Any less, and it can't possibly be fully connected. Any more, and it has to contain cycles. Additionally, if the graph is fully connected and contains exactly `n - 1` edges, it can't possibly contain a cycle, and therefore must be a tree!
+### Solution
+```python
+class Solution:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # if number of edges isn't n - 1
+        if len(edges) != n - 1: return False
+        
+        # create adjacency list
+        adj_list = [[] for _ in range(n)]
+        for A, B in edges:
+            adj_list[A].append(B)
+            adj_list[B].append(A)
+        
+        # create set to keep track of visited nodes
+        visited = set()
+
+        def dfs(node):
+            if node in visited: return
+            visited.add(node)
+            for neighbor in adj_list[node]:
+                dfs(neighbor)
+
+        # traverse the graph from the node 0
+        dfs(0)
+
+        # if all nodes visited -> fully connected -> valid tree
+        return len(visited) == n
+```
+### Complexity Analysis
+- Time Complexity: $O(n)$
+  - Creating an adjacency list has a time complexity of $O(n+e)$. Because $e$ is bounded by $n$, we can reduce this slightly to $O(n+n)=O(n)$.
+  - The recursive depth-first search's "neighbor" loop runs only once for each node. Collectively, the total number of iterations of the "neighbor" loop is $e=n$. Hence $O(n)$.
+- Space Complexity: $O(n)$
+  - The adjacency list takes $O(n+e)$ space. Here, this is simply $O(n)$.
+  - In the worst case, if all nodes are on the stack at the same time, DFS will require an additional $O(n)$ space.
