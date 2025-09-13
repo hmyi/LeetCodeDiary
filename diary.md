@@ -141,7 +141,7 @@ class Solution:
         left = 0
         right = 0
 
-        # expands to find longest palindromic substring with l, r as center
+        # expand to find longest palindromic substring with l, r as center
         def expand(l, r):
             # bounds & palindrome check
             while l >= 0 and r < len(s) and s[l] == s[r]:
@@ -175,3 +175,69 @@ class Solution:
   - There are $2n − 1 = O(n)$ centers. For each center, we call expand, which costs up to $O(n)$.
 - Space Complexity: $O(1)$
   - No extra space used except for a few integers.
+# Date: 2025-09-13 SAT
+## Problem: [133] Clone Graph
+- **Topics:** Graph, DFS, BFS, Hash Table
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/clone-graph/description/
+### Problem Summary
+- **Requirement:** Given a reference of a node in a connected undirected graph. Return a deep copy (clone) of the graph.
+- **Clarification:** Each node in the graph contains a value (`int`) and a list (`List[Node]`) of its neighbors.
+
+  ```Java
+  class Node {
+      public int val;
+      public List<Node> neighbors;
+  }
+  ```
+### Key Insight
+- Depth First Search
+- Breadth First Search
+- Hash Table
+  - quick reference from original node to cloned node
+### Solution
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+
+from typing import Optional
+class Solution:
+    def __init__(self):
+        # keep track of visited nodes & help avoid cycles
+        # key: original node, val: cloned node
+        self.visited = {}
+
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        # if input graph is empty
+        if not node:
+            return node
+
+        # if node already visited, return clone
+        if node in self.visited:
+            return self.visited[node]
+
+        # create clone_node with identical val & empty neighbors
+        clone_node = Node(node.val, [])
+
+        # add clone_node to visited
+        # NOTE: objects are passed by reference in Python
+        self.visited[node] = clone_node
+
+        # if node has neighbors
+        if node.neighbors:
+            # recursively clone node.neighbors & update clone_node.neighbors
+            clone_node.neighbors = [self.cloneGraph(n) for n in node.neighbors]
+            # pass by reference -> update self.visited[node].neighbors
+
+        return clone_node
+```
+### Complexity Analysis
+- Time Complexity: $O(n + m)$
+  - $n$ is the number of nodes and $m$ is the number of edges.
+- Space Complexity: $O(n)$
+  - The space is occupied by the `visited` hash map and the recursion stack. `visited` takes up $O(n)$ space. The space occupied by the recursion stack is $O(h)$ where $h$ is the height of the graph. $h$ is bounded by $n$ in the worst case. Hence, the recursion stack also takes up $O(n)$ space.
