@@ -132,8 +132,9 @@ class Solution:
     - Bottom-up (Tabulation) -> iterative
 - "Expand From Centers"
   - "expand" at each single character or pair of identical connected characters, expand as long as the palindrome condition is met
-- TODO
-### Solution 1 (Best Space Complexity)
+- Manacher's Algorithm **[BEYOND THE SCOPE]**
+  - finds the longest palindromic substring in $O(n)$ time and space.
+### Solution
 ```python
 class Solution:
     def longestPalindrome(self, s: str) -> str:
@@ -169,15 +170,8 @@ class Solution:
         # return the substring ("+1" for proper indexing)
         return s[left : right + 1]
 ```
-### Complexity Analysis 1 (Best Space Complexity)
+### Complexity Analysis
 - Time Complexity: $O(n^2)$
   - There are $2n − 1 = O(n)$ centers. For each center, we call expand, which costs up to $O(n)$.
 - Space Complexity: $O(1)$
   - No extra space used except for a few integers.
-### Solution 2 (Best Time Complexity)
-```python
-TODO
-```
-### Complexity Analysis 2 (Best Time Complexity)
-- Time Complexity: TODO
-- Space Complexity: TODO
