@@ -324,3 +324,42 @@ class Solution:
   - Each center can potentially expand to the length of the string, so time spent on each center is linear on average. Thus total time spent is $n*(2n−1)≃n^2$.
 - Space Complexity: $O(1)$
   - No extra space used except for an integer `count`.
+## Problem: [11] Container With Most Water
+- **Topics:** Array, Two Pointers, Greedy
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/container-with-most-water/description/
+### Problem Summary
+- **Requirement:** You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i^th` line are `(i, 0)` and `(i, height[i])`. Find two lines that together with the x-axis form a container, such that the container contains the most water. Return the maximum amount of water a container can store.
+- **Constraint:** Notice that you may not slant the container.
+### Key Insight
+- Two Pointers
+  - We take two pointers, start from both ends of the array. At every step, calculate the new area formed, update max area, and move the pointer pointing to the shorter line towards the other end by one step.
+- Greedy Algorithm
+  - We starts with the widest container,  `l = 0` and `r = n - 1`. Suppose `height[l] < height[r]`. Then, this is already the largest container `l` can possibly form. Therefore, we can throw it away and start again with `l = 1` and `r = n - 1`.
+- Proof [here](https://leetcode.com/problems/container-with-most-water/solutions/6089/Anyone-who-has-a-O(N)-algorithm/comments/7268/)
+### Solution
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        l = 0
+        r = len(height) - 1
+        max_area = 0
+
+        # loop until 2 pointers meet
+        while l < r:
+            # update max_area
+            max_area = max(max_area, (r - l) * min(height[l], height[r]))
+
+            # move l or r pointer as needed
+            if height[l] < height[r]:
+                l += 1
+            else:
+                r -= 1
+
+        return max_area
+```
+### Complexity Analysis
+- Time Complexity: $O(n)$
+  - The array is traversed once.
+- Space Complexity: $O(1)$
+  - Constant space is used.
