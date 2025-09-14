@@ -286,3 +286,41 @@ class Solution:
 - Space Complexity: $O(n)$
   - The adjacency list takes $O(n+e)$ space. Here, this is simply $O(n)$.
   - In the worst case, if all nodes are on the stack at the same time, DFS will require an additional $O(n)$ space.
+# Date: 2025-09-14 SUN
+## Problem: [647] Palindromic Substrings
+- **Topics:** String, Two Pointers
+- **Difficulty:** Medium
+- **Link:** https://leetcode.com/problems/palindromic-substrings/description/
+### Problem Summary
+- **Requirement:** Given a string `s`, return the number of palindromic substrings in it.
+- **Clarification:** A string is a palindrome when it reads the same backward as forward. A substring is a contiguous sequence of characters within the string.
+### Key Insight
+- "Expand From Centers"
+- Manacher's Algorithm **[BEYOND THE SCOPE]**
+- See [[5] Longest Palindromic Substring](#problem-5-longest-palindromic-substring)
+### Solution
+```python
+class Solution:
+    count = 0
+
+    def countSubstrings(self, s: str) -> int:
+        # expand to find palindromic substrings with l, r as center
+        def expand(l, r):
+            if l >= 0 and r < len(s) and s[l] == s[r]:
+                self.count += 1
+                expand(l - 1, r + 1)
+
+        # iterate through all "centers"
+        for i in range(len(s)):
+            # odd centers & even centers
+            expand(i, i)
+            expand(i, i + 1)
+        
+        return self.count
+```
+### Complexity Analysis
+- Time Complexity: $O(n^2)$
+  - The number of possible palindromic centers is $2n−1$: there are $n$ single character centers and $n−1$ consecutive character pairs as centers.
+  - Each center can potentially expand to the length of the string, so time spent on each center is linear on average. Thus total time spent is $n*(2n−1)≃n^2$.
+- Space Complexity: $O(1)$
+  - No extra space used except for an integer `count`.
